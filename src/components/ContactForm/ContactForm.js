@@ -1,36 +1,56 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import classes from './ContactForm.module.css';
+
+const INITIAL_STATE = { name: '', number: '' };
 
 class ContactForm extends Component {
-  // state = {
-  //   name: '',
-  //   number: '',
-  // };
+  state = {
+    ...INITIAL_STATE,
+  };
+
+  handleChange = e => {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
+  };
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.addContacts({ ...this.state });
+  };
+
   render() {
-    console.log(this.props);
     return (
       <>
-        {/* <div>
-          <form action="submit" clas="form" onSubmit={this.handleSubmit}>
-            <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              name="name"
-              value={this.state.name}
-              onChange={this.handleInputName}
-            />
-            <label htmlFor="number">Number</label>
-            <input
-              type="text"
-              name="number"
-              value={this.state.number}
-              onChange={this.props.handleInputName}
-            />
+        <h2 className={classes.tilie}>Phonebook</h2>
+        <div className={classes.contactFormConteiner}>
+          <form
+            action="submit"
+            className={classes.contactForm}
+            onSubmit={this.handleSubmit}
+          >
+            <div className={classes.lableName}>
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                name="name"
+                placeholder="enter name"
+                value={this.state.name}
+                onChange={this.handleChange}
+              />
+            </div>
+
+            <div className={classes.lableName}>
+              <label htmlFor="number">Number</label>
+              <input
+                type="text"
+                name="number"
+                placeholder="enter number"
+                value={this.state.number}
+                onChange={this.handleChange}
+              />
+            </div>
+            <button type="submit">Add contacts</button>
           </form>
-          <button type="button" onClick={this.props.handleSubmit}>
-            Add contacts
-          </button>
-        </div> */}
+        </div>
       </>
     );
   }

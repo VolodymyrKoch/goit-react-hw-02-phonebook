@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
-// import ContactForm from './components/ContactForm/ContactForm.js';
-// import PropTypes from 'prop-types';
+import ContactForm from './components/ContactForm/ContactForm.js';
+import Filter from './components/Filter/Filter.js';
+import ContactList from './components/ContactList/ContactList.js';
+import classes from './App.module.css';
+import './bases.css';
 
 class App extends Component {
   state = {
@@ -13,15 +15,25 @@ class App extends Component {
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
-    name: '',
-    number: '',
   };
+  addContacts = el => {
+    if (this.state.contacts.find(item => item.name === el.name)) {
+      alert(`${el.name} is already in contacts.`);
+    } else {
+      this.setState(prevState => {
+        const updateState = [...prevState.contacts, el];
+        return { contacts: updateState };
+      });
+    }
+  };
+
   handleFilter = () => {
     const { contacts, filter } = this.state;
     return contacts.filter(contactItem =>
       contactItem.name.toLowerCase().includes(filter.toLowerCase()),
     );
   };
+
   handleDelete = id => {
     const { contacts } = this.state;
     const obj = contacts.find(el => el.id === id);
@@ -33,92 +45,21 @@ class App extends Component {
       ],
     }));
   };
-  handleChange = e => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
+
+  filterRender = filter => {
+    this.setState({ filter });
   };
-
-  handleSubmit = e => {
-    e.preventDefault();
-
-    const contacts = [...this.state.contacts];
-    console.log(contacts);
-    const index = contacts.findIndex(el => el.name === this.state.name);
-    if (this.state.name && index === -1) {
-      const contactItem = {
-        id: uuidv4(),
-        name: this.state.name,
-        number: this.state.number,
-      };
-      this.setState(prevState => {
-        return {
-          contacts: [...prevState.contacts, contactItem],
-        };
-      });
-    } else alert(`${this.state.name} is already in contacts.`);
-  };
-
   render() {
+    const { filter, contacts } = this.state;
+    const visibleContact = this.handleFilter();
     return (
       <>
-        <div>
-          <h2>Phonebook</h2>
-          <div>
-            <form action="submit" clas="form" onSubmit={this.handleSubmit}>
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={this.state.name}
-                onChange={this.handleChange}
-              />
-              <label htmlFor="number">Number</label>
-              <input
-                type="text"
-                name="number"
-                value={this.state.number}
-                onChange={this.handleChange}
-              />
-              <button type="submit">Add contacts</button>
-            </form>
-
-            <label htmlFor="filter">Find contacts by name</label>
-            <input
-              type="text"
-              name="filter"
-              value={this.state.filter}
-              onChange={this.handleChange}
-            />
-          </div>
-          {/* <ContactForm */}
-          {/* handleInputName={this.handleChange}
-            handleSubmit={this.handleSubmit}
-          /> */}
-
-          <h2>Contacts</h2>
-          {this.state.name}
-          {/* <Filter  /> */}
-          {/* <ContactList  /> */}
-
-          <ul>
-            {this.handleFilter().map(elem => {
-              return (
-                <li key={elem.id}>
-                  <p>
-                    {elem.name} : {elem.number}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      this.handleDelete(elem.id);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+        <div className={classes.conteiner}>
+          <ContactForm addContacts={this.addContacts} />
+          {contacts.length > 1 && (
+            <Filter filter={filter} filterRender={this.filterRender} />
+          )}
+          <ContactList array={visibleContact} deleteItem={this.handleDelete} />
         </div>
       </>
     );
