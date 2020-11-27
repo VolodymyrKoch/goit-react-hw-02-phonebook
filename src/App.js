@@ -47,7 +47,7 @@ class App extends Component {
   };
 
   filterRender = filter => {
-    this.setState({ filter });
+    this.setState({ filter }); // ?
   };
   render() {
     const { filter, contacts } = this.state;

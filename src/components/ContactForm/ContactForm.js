@@ -15,6 +15,7 @@ class ContactForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.addContacts({ ...this.state });
+    this.setState({ name: '', number: '' }); // очищаю input після submit(відправки)
   };
 
   render() {
