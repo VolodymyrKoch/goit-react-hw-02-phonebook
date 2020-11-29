@@ -44,10 +44,11 @@ class App extends Component {
         ...prevState.contacts.slice(index + 1),
       ],
     }));
+    this.setState({ filter: '' }); // очистили інпут після нажаття на кнопку delete
   };
 
   filterRender = filter => {
-    this.setState({ filter }); // ?
+    this.setState({ filter }); // відповідає запису this.setState({ filter: filter })
   };
   render() {
     const { filter, contacts } = this.state;
